@@ -1,0 +1,16 @@
+torch>=2.2
+torchaudio>=2.2
+transformers>=4.53.3
+datasets>=2.20.0
+accelerate>=0.33.0
+speechbrain>=0.5.16
+soundfile>=0.12.1
+numpy>=1.24
+scipy>=1.10
+tqdm>=4.66
+pyyaml>=6.0
+peft>=0.11.1
+gradio>=4.39.0
+huggingface_hub>=0.24.6
+# optional (only if you later choose 8-bit/QLoRA on supported models)
+bitsandbytes>=0.43.1
