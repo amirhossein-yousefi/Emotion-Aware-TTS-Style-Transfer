@@ -1,0 +1,24 @@
+region: us-east-1
+role_arn: arn:aws:iam::<ACCOUNT_ID>:role/service-role/SageMakerExecutionRole
+
+s3_bucket: s3://YOUR-BUCKET
+s3_prefix: emotion-tts
+
+training:
+  instance_type: ml.g5.2xlarge
+  instance_count: 1
+  framework_version: "2.4"
+  py_version: "py311"
+  distribution:
+    torch_distributed:
+      enabled: false
+
+data_channels:
+  train: s3://YOUR-BUCKET/emotion-tts/data/train
+  val:   s3://YOUR-BUCKET/emotion-tts/data/val
+
+hyperparameters:
+  epochs: 5
+  batch_size: 8
+  lr: 3e-4
+  sample_rate: 22050

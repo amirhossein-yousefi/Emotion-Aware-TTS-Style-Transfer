@@ -1,0 +1,3 @@
+# Inference-only additions; training uses the repo-root requirements.txt
+soundfile
+numpy
