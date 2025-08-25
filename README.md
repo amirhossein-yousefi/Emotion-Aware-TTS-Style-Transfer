@@ -2,6 +2,15 @@
 # Emotion-Aware TTS Style Transfer
 
 > End-to-end **emotion-aware text-to-speech (TTS)** with style transfer on top of Microsoft **SpeechT5**, using **WavLM** for prosody/emotion representation and **SpeechBrain ECAPA** for speaker embeddings. Includes a minimal **Gradio** demo, a CLI inference script, training scaffolding, and **AWS SageMaker** utilities.
+## 🚀 Model on Hugging Face
+
+[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Emotion--Aware--TTS--Style--Transfer-yellow.svg)](https://huggingface.co/Amirhossein75/Emotion-Aware-TTS-Style-Transfer)
+
+<p align="center">
+  <a href="https://huggingface.co/Amirhossein75/Emotion-Aware-TTS-Style-Transfer">
+    <img src="https://img.shields.io/badge/🤗%20View%20on%20Hugging%20Face-blueviolet?style=for-the-badge" alt="Hugging Face Repo">
+  </a>
+</p>
 
 ---
 
