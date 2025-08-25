@@ -23,8 +23,8 @@ from peft import LoraConfig, get_peft_model
 
 def parse_args():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--csv", required=True, help="Manifest CSV with path,text,emotion,speaker,style_path")
-    ap.add_argument("--out_dir", default="runs/emotts")
+    ap.add_argument("--csv", help="Manifest CSV with path,text,emotion,speaker,style_path",default="../data/ravdess_manifest.csv")
+    ap.add_argument("--out_dir", default="runs/emotts_ravdess")
     ap.add_argument("--base_tts", default="microsoft/speecht5_tts")
     ap.add_argument("--vocoder", default="microsoft/speecht5_hifigan")
     ap.add_argument("--ssl_name", default="microsoft/wavlm-base-plus")
@@ -281,6 +281,7 @@ def main():
         save_steps=args.save_steps,
         eval_steps=args.eval_steps,
         logging_steps=args.logging_steps,
+        logging_dir=os.path.join(args.out_dir,'logs'),
         report_to=["tensorboard"],
         load_best_model_at_end=True,
         greater_is_better=False,

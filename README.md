@@ -172,9 +172,42 @@ python -m src.train_emotts --help
 ```
 Look for arguments such as input CSVs (train/val), output directory (e.g., `runs/emotts_esd`), optimizer settings, and whether to enable PEFT/LoRA.
 
+**Download** the finetuned weights and tensorboard logs with bellow hyperparameter from [here](https://drive.google.com/file/d/1F4MzWeWjVvifTCUfAkNcbE8HZ9AshELI/view?usp=sharing)
+
+## 🔧 Core Hyperparameters
+
+| Category | Parameter | Default / Value | Notes |
+|---|---|---:|---|
+| **Data I/O** | `--csv` | `../data/ravdess_manifest.csv` | Manifest with `path,text,emotion,speaker,style_path` |
+|  | `--out_dir` | `runs/emotts_ravdess` | Training outputs, logs, checkpoints |
+| **Base Models** | `--base_tts` | `microsoft/speecht5_tts` | Sequence‑to‑sequence TTS backbone |
+|  | `--vocoder` | `microsoft/speecht5_hifigan` | Used at inference time for waveform synthesis |
+| **Style / SSL** | `--ssl_name` | `microsoft/wavlm-base-plus` | WavLM for style vectors (mean‑pooled hidden states) |
+|  | `--spk_embedder` | `speechbrain/spkrec-ecapa-voxceleb` | For x‑vector speaker embeddings |
+| **Steps & LR** | `--max_steps` | **4000** | Total training steps |
+|  | `--lr` | **1e-5** | Learning rate |
+| **Batching** | `--per_device_train_batch_size` | **4** | Per‑GPU train batch size |
+|  | `--per_device_eval_batch_size` | **2** | Per‑GPU eval batch size |
+|  | `--gradient_accumulation_steps` | **8** | Effective batch = `per_device_bs × grad_accum × #GPUs` |
+| **Warmup** | `--warmup_steps` | **500** | Linear warmup steps |
+| **Precision** | `--fp16` | *flag* | Mixed precision when passed |
+| **Emotion Loss** | `--emo_ce_weight` | **0.2** | Weight for emotion CE term in total loss |
 > **Outputs**: after training, save **(1)** the SpeechT5 checkpoint directory (processor + model), and **(2)** the two module weights: `style_adaptor.pt` and `style_fusion.pt` in the same directory (the inference code looks for them there by default).
 
 ---
+
+## 🧩 LoRA / PEFT (Optional)
+
+| Parameter | Default | Description |
+|---|---:|---|
+| `--use_lora` | *flag* | Enable LoRA adapters on target linear layers |
+| `--lora_r` | 16 | Rank |
+| `--lora_alpha` | 32 | Scaling |
+| `--lora_dropout` | 0.05 | Dropout on LoRA paths |
+| `--lora_target` | `attn` | One of: `attn`, `mlp`, `all` |
+| `--merge_lora_on_save` | **True** | Merge adapters into base weights on save (if supported) |
+
+> Target layer names are inferred from module names (e.g., `q/k/v/o`, `*_proj`, `fc1/fc2`, `wi/wo`). If nothing is found, a safe default set is used.
 ## 🖥️ Training Hardware & Environment
 
 - **Device:** Laptop (Windows, WDDM driver model)
@@ -188,8 +221,8 @@ Look for arguments such as input CSVs (train/val), output directory (e.g., `runs
 
 ## 📊 Training Logs & Metrics
 
-- **Total FLOPs (training):** ``
-- **Training runtime:** `` seconds
+- **Total FLOPs (training):** `3,285,475,498,393,600`
+- **Training runtime:** `2,391.8157` seconds
 - **Logging:** TensorBoard-compatible logs 
 
 You can monitor training live with:
@@ -202,7 +235,7 @@ tensorboard --logdir ##yourdir
 
 The following plot shows the training loss progression:
 
-![Training Loss Curve](assets/)
+![Training Loss Curve](assets/train_loss.svg)
 ## Inference
 
 You can synthesize audio by conditioning on **text** + a **style reference WAV** (emotion/prosody). Optionally, provide a **separate target-speaker WAV** for voice identity (or leave it unset to reuse the style WAV for both).
